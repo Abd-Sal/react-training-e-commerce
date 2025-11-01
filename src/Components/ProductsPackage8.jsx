@@ -15,7 +15,9 @@ const ProductsPackage8 = ({title, backgroundURL, categroy, limit=8}) => {
     .then((response)=>{
       if(response.ok)
         return response.json();
-      throw new Error(response.json());
+      return response.json().then((serverError)=>{
+          throw new Error(serverError.message || `HTTP ${response.status}`)
+      })
     })
     .then((data)=>{
       setProducts(data.products);

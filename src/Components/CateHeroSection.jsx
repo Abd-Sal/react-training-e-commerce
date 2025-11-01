@@ -14,7 +14,9 @@ const CateHeroSection = () => {
         .then((res)=>{
             if(res.ok)
               return res.json()
-            throw new Error(res.json());
+            return response.json().then((serverError)=>{
+                throw new Error(serverError.message || `HTTP ${response.status}`)
+            })
         })
         .then((data)=>{
           setCategories(data.slice(0,10))

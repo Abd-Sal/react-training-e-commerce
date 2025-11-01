@@ -14,7 +14,9 @@ const RecommendedProducts = ({category = 'mens-shirts'}) => {
     .then((response)=>{
       if(response.ok)
         return response.json();
-      throw new Error(response.json());
+      return response.json().then((serverError)=>{
+          throw new Error(serverError.message || `HTTP ${response.status}`)
+      })
     })
     .then((data)=>{
       setProducts(data.products);

@@ -13,7 +13,9 @@ const OffersTop4Product = ({query = 'phone', colSize = 3}) => {
         .then(res => {
             if(res.ok) 
                 return res.json()
-            throw new Error('Couldn`t load products :(');
+            return response.json().then((serverError)=>{
+                throw new Error(serverError.message || `HTTP ${response.status}`)
+            })
         })
         .then(data => {
             setProducts(data.products);

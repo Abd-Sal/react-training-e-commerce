@@ -1,42 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { Container, Row, Col, Pagination, Alert } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react'
+import { Row, Col, Alert } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner';
-import { useSearchParams } from 'react-router';
 import ProductCardV2 from './ProductCardV2';
+import Paginatoin from '../Components/Paginatoin';
 
 const AllProducts = () => {
   const [allProducts, setAllProducts] = useState([]);
-  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [cat, setCat] = useState('')
-
-  useEffect(()=>{
-    setLoading(true);
-    let url = 'https://dummyjson.com/products/';
-    let search = searchParams.get("search");
-    let category = searchParams.get("category")
-    if(search)
-      url += `search?q=${search}`
-    if(category){
-      url += `category/${category}`
-    }
-    fetch(`${url}`)
-      .then((res) =>{
-        if(res.ok)
-          return res.json()
-        throw new Error({msg: 'Not Fetched', res: res.json()})
-      } )
-      .then((data) =>{
-          setAllProducts(data.products);
-      })
-      .catch((e) => {
-        console.log(e.message.msg)
-      })
-      .finally(()=>{ 
-        setLoading(false);
-      })
-  },[searchParams])
+  const [errorMsg, setErrorMsg] = useState('')
 
   return (
       <Row className='position-relative' key={2}>
@@ -60,17 +31,29 @@ const AllProducts = () => {
               <>
               <Col lg={12} className='position-relative pt-5 pb-5'>
                 <Alert key={'faild-msg'} variant={'warning'} className='w-100 position-absolute top-50 start-50 translate-middle'>
-                    No Results...
+                    {
+                      errorMsg ? errorMsg : 'No Results...'
+                    }
                 </Alert>
               </Col>
               </>
           )}
           {
             loading &&
-            <Spinner animation="border" role="status" className='position-absolute spinner-product-loading'>
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <Col lg={12} className='position-relative pt-5 pb-5'>
+              <Spinner animation="border" role="status" className='position-absolute spinner-product-loading'>
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </Col>
           }
+          <Col lg={12}>
+            <Paginatoin 
+              setAllProducts={setAllProducts}
+              setLoading={setLoading}
+              setErrorMsg={setErrorMsg}
+              sortingFields={['title', 'price', 'rating']}
+            />
+          </Col>
       </Row>
   )
 }
