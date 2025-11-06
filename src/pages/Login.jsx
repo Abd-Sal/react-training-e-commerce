@@ -3,21 +3,27 @@ import { Alert, Col, Container, Row, Spinner } from "react-bootstrap"
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../Components/Logo";
 import { AuthContext } from "../context/AuthContext";
+import { APIConfig } from "../API/APIConfig";
+import { CallAPIService } from "../Services/CallAPIService";
 
 const Login = () => {
-    const {setAuth} = useContext(AuthContext)
+    // const {setAuth} = useContext(AuthContext)
+    const {auth, setAuth, isInitialized} = useContext(AuthContext)
+
     const [userInfo, setUserInfo] = useState({
         'name': '',
         'pass': ''
     })
+
     const [loading, setLoading] = useState(false)
-    const [faildStatus, setFaildStatus] = useState(false);
+    const [faildStatus, setFaildStatus] = useState('');
     const [success, setSuccess] = useState(false)
     const [preAuthCheck, setPreAuthCheck] = useState(false)
     const navigate = useNavigate();
     const username = useRef();
     const password = useRef();
     const loginRequest = () =>{
+        setFaildStatus('')
         setLoading(true);
         fetch('https://tamkeen-dev.com/api/user/login?_format=json',{
             method: "POST",
@@ -29,17 +35,19 @@ const Login = () => {
                 setSuccess(true)
                 return response.json();
             }
-            else if(response.status === 400){
-                setFaildStatus(true)
-                throw new Error("Faild login")
-            }
-            throw new Error("Something went wrong")
+            return response.json().then((serverErrorMsg) => { throw new Error(serverErrorMsg.message)})
         })
         .then((data) => {
-            setAuth(data)
-            localStorage.setItem('auth', JSON.stringify(data));
+            let _data = data
+            setAuth({
+                ...auth,
+                data,
+                'ps' : `basic ${btoa(`${userInfo.name}:${userInfo.pass}`)}`
+            })
+            localStorage.setItem('auth', JSON.stringify(_data));
         })
-        .catch(()=>{
+        .catch((e)=>{
+            setFaildStatus(e.message)
         })
         .finally(()=>{
             setLoading(false);
@@ -64,6 +72,12 @@ const Login = () => {
         setPreAuthCheck(true)
     }, [success, preAuthCheck])
 
+    // useEffect(()=>{
+    //     if(!success)
+    //         return;
+    //     let url = `${APIConfig.BASE_URL_TAMKEEN}${APIConfig.ENDPOINTS_TAMKEEN.USER}?_format=json`;
+    // }, [])
+
     if(preAuthCheck)
         return (
             <>
@@ -84,7 +98,7 @@ const Login = () => {
                                 {
                                     faildStatus &&
                                     <Alert key={'danger'} variant={'danger'} className="w-100">
-                                        Username or Password is wrong
+                                        {faildStatus}
                                     </Alert>
                                 }
                                 <input 

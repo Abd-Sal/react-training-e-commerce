@@ -11,17 +11,15 @@ import Login from './pages/Login';
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFound';
 import Registration from './pages/Registration';
-import { AuthContext } from './context/AuthContext';
+import { AuthContext, AuthProvider } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import './index.css'
 import "flag-icons/css/flag-icons.min.css";
 
 function App() {
-  const [auth, setAuth] = useState({})
-  const userContext = {auth, setAuth}
   return (
     <>
-      <AuthContext.Provider value={userContext}>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<Layout />}>         
             <Route index element={<Home/>}/>
@@ -35,7 +33,7 @@ function App() {
           <Route path='/registration' element={<Registration />}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </AuthContext.Provider>
+      </AuthProvider>
     </>
   )
 }

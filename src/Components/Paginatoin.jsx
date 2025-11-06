@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { Col, Row } from "react-bootstrap"
-import { ProductService } from '../Services/ProductService';
+import { CallAPIService } from '../Services/CallAPIService';
 import { APIConfig } from '../API/APIConfig';
+import { useSearchParams } from "react-router";
 
 const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]}) => {
 
@@ -14,24 +15,40 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
     const [totalPages, setTotalPages] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(()=>{
+        setSkip(0)
+    }, [searchParams])
+
     useEffect(() => {
         const calculatedTotalPages = Math.ceil(totalProducts / limit);
         setTotalPages(calculatedTotalPages);
         
         const calculatedCurrentPage = Math.floor(skip / limit) + 1;
         setCurrentPage(calculatedCurrentPage);
-    }, [totalProducts, limit, skip]);
+    }, [totalProducts, limit, skip, searchParams]);
 
     useEffect(() => {
-        setErrorMsg('');
-        setLoading(true);
-        ProductService.getProducts({
+        const params = new URLSearchParams(window.location.search);
+        let options = {
             'limit': limit,
             'skip': skip,
             'order': order,
             'sortBy': sortBy,
-            'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS}`
-        })
+        }
+        let category = params.get(`category`)
+        let search = params.get('search');
+        search ? options['searchQuery'] = search : '';
+        let url = `${APIConfig.BASE_URL}${category ? APIConfig.ENDPOINTS.PRODUCTS_BY_CATEGORIRES(category) :  search ? APIConfig.ENDPOINTS.SEARCH_PRODUCT : APIConfig.ENDPOINTS.PRODUCTS}`
+        if(!params.getAll.length)
+            url = `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS}`
+        options['url'] = `${url}`
+        console.log(url);
+        
+        setErrorMsg('');
+        setLoading(true);
+        CallAPIService.getFetch(options)
         .then((data) => {
             setAllProducts(data.products)
             setTotalProducts(data.total)
@@ -42,7 +59,7 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
         .finally(() => { 
             setLoading(false);
         })
-    }, [limit, sortBy, order, skip])
+    }, [limit, sortBy, order, skip, searchParams])
 
   return (
     <Row className="p-0">

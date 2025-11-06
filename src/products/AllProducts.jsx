@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Alert } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner';
 import ProductCardV2 from './ProductCardV2';
@@ -57,5 +57,4 @@ const AllProducts = () => {
       </Row>
   )
 }
-
 export default AllProducts

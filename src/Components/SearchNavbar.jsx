@@ -1,27 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import { NavLink, useNavigate } from 'react-router';
+import { APIConfig } from '../API/APIConfig';
+import { CallAPIService } from '../Services/CallAPIService';
 
 const SearchNavbar = () => {
     const searchForm = useRef();
     const [allCategories, setAllCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState();
     const [search, setSearch] = useState('')
-    const [url, setUrl] = useState('');
     const navigate = useNavigate();
 
     const fetchAllCategories = ()=>{
-        fetch(`https://dummyjson.com/products/category-list`)
-        .then((response)=>{
-            if(response.ok)
-                return response.json();
-            throw new Error('Faild Get Categories')
+        let url = `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.CATEGORIRES}`
+        CallAPIService.getFetch({
+            'url': `${url}`
         })
         .then((data)=>{
             setAllCategories(data)
         })
         .catch((e) =>{
-            // console.log(e.message)
+            console.log(e.message);
         })
         .finally(()=>{})
     }
@@ -31,13 +30,16 @@ const SearchNavbar = () => {
     const handleSelect = (category) => {
         setSelectedCategory(category);
     };
+
     const doSearch = ()=>{
         let _url = '/products';
         if(search)
             _url += `?search=${search}`
         if(selectedCategory)
-            _url += `&category=${selectedCategory}`
-        // setUrl(_url);
+            if(search)
+                _url += `&category=${selectedCategory}`
+            else
+                _url += `?category=${selectedCategory}`
         navigate(`${_url}`)
     }
 
@@ -49,17 +51,12 @@ const SearchNavbar = () => {
             onSubmit={(e)=>{
                 e.preventDefault();
                 doSearch();
-                console.log('Searching...')
             }}
             >
             <input 
                 type="text"
                 placeholder='Search'
                 className='ps-2 pe-2 search-navbar flex-grow-1'
-                // onKeyUp={(e)=>{
-                //     if(e.key === 'Enter' && search.length > 3)
-                //         searchForm.current.submit();
-                // }}
                 onInput={(e)=>{
                     if(e.key !== 'Enter')
                         setSearch(e.target.value)
@@ -71,7 +68,11 @@ const SearchNavbar = () => {
                     {selectedCategory? selectedCategory : 'All Categories'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                    <Dropdown.Item onClick={()=>handleSelect('')}>
+                        All Categories
+                    </Dropdown.Item>
                     {
+
                         Array.isArray(allCategories) && allCategories.length ?
                             allCategories.map((item) => (
                             <Dropdown.Item key={item} onClick={() => handleSelect(item)}>

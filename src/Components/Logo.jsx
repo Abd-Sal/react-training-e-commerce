@@ -8,7 +8,7 @@ const Logo = () => {
       <circle cx="24" cy="23" r="5" fill="#96C0FF"/>
       <circle cx="7" cy="25" r="7" fill="#5E9FFF"/>
       </svg>
-      <p>TamStore</p>
+      <p className='mb-0'>TamStore</p>
     </NavLink>
   )
 }

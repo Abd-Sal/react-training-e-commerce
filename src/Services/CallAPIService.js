@@ -1,12 +1,12 @@
-export const ProductService = {
-  getProducts: (options={})=>{
+export const CallAPIService = {
+  getFetch: (options={})=>{
     const params = new URLSearchParams();  
-    options.searcQuery && params.append('q', options.searcQuery)
+    options.searchQuery && params.append('q', options.searchQuery)
     options.limit && params.append('limit', options.limit)
     options.skip && params.append('skip', options.skip)
     options.sortBy && params.append('sortBy', options.sortBy)
     options.order && params.append('order', options.order)
-    options.select && params.append('limit', options.select)
+    options.select && params.append('select', options.select)
     const url = `${options.url}?${params.toString()}`
     return fetch(url)
       .then((response) =>{

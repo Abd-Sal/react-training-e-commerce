@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { Alert, Col, Spinner } from "react-bootstrap"
 import ProductCardV2 from "../products/ProductCardV2"
+import { CallAPIService } from '../Services/CallAPIService';
+import { APIConfig } from '../API/APIConfig';
 
 const RecommendedProducts = ({category = 'mens-shirts'}) => {
     const [products, setProducts] = useState({})
@@ -10,13 +12,10 @@ const RecommendedProducts = ({category = 'mens-shirts'}) => {
   const getProducts = ()=>{
     setIsLoading(true);
     setFailedMsg('');
-    fetch(`https://dummyjson.com/products/category/${category}?limit=10`)
-    .then((response)=>{
-      if(response.ok)
-        return response.json();
-      return response.json().then((serverError)=>{
-          throw new Error(serverError.message || `HTTP ${response.status}`)
-      })
+    CallAPIService.getFetch({
+      'limit': 10,
+      'skip': 0,
+      'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS_BY_CATEGORIRES(category)}`
     })
     .then((data)=>{
       setProducts(data.products);
@@ -27,6 +26,8 @@ const RecommendedProducts = ({category = 'mens-shirts'}) => {
     .finally(()=>{
       setIsLoading(false);
     })
+
+
   }
 
   useEffect(()=>{

@@ -3,8 +3,11 @@ import FullNewsLatterSubscribe from '../Components/FullNewsLatterSubscribe'
 import { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router';
 import ProductImages from '../Components/ProductImages';
+import { CallAPIService } from '../Services/CallAPIService';
+import { APIConfig } from '../API/APIConfig';
 
 const ProductDetails = () => {
+    const [loadingPage, setLoadingPage] = useState(true)
     const [product, setProduct] = useState({});
     const [loading, setLoading] = useState(false);
     const [fail, setFail] = useState('');
@@ -13,32 +16,40 @@ const ProductDetails = () => {
     useEffect(()=>{
         setLoading(true)
         setFail('')
-        fetch(`https://dummyjson.com/products/${id}`)
-        .then((response)=>{
-            if(response.ok)
-                return response.json()
-            return response.json().then((serverError)=>{
-                throw new Error(serverError.message || `HTTP ${response.status}`)
-            })
+        CallAPIService.getFetch({
+            'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCT_BY_ID(id)}`
         })
         .then((data)=>{
             setProduct(data);
         })
         .catch((e)=>{
             setFail(e.message);
-            console.log(e.message);
         })
         .finally(()=>{
             setLoading(false);
         })
     },[id])
 
+    useEffect(() => {
+        if (product) {
+            setLoadingPage(false)
+        }
+    }, [product]);
+
+    if(loadingPage)
+        return(<></>)
     return (
             <>
                 <Container>
                     <Row>
+                        <Col lg={12}>
+                            <h1>Product Details</h1>
+                        </Col>
                         <Col lg={4} className='position-relative'>
                             <ProductImages images={product.images}/>
+                            {
+                                // console.log(product.images)
+                            }
                         </Col>
                         {
                             fail &&

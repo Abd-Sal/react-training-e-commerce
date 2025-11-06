@@ -1,24 +1,92 @@
 import { FaListUl } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
-import { Col, Container, Row } from "react-bootstrap";
+import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import { NavLink } from "react-router";
+import { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import { CallAPIService } from "../Services/CallAPIService";
+import { APIConfig } from "../API/APIConfig";
 
 const FilterNavbar = ({top}) => {
-  return (
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [failMsg, setFailMsg] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [categories, setCategories] = useState({});
+
+    const getCategories = ()=>{
+        setFailMsg('')
+        setLoading(true);
+        CallAPIService.getFetch({
+            'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS_CATEGORIRES}`
+        })
+        .then((data)=>{
+            setCategories(data)
+        })
+        .catch((err)=>{
+            setFailMsg(err.message)
+        })
+        .finally(()=>{
+            setLoading(false);
+        })
+    }
+
+    useEffect(()=>{
+        getCategories();
+    }, [])
+
+    return (
     <>
         <Container className={top}>
             <Row>
-                <Col lg={8}>
+                <Col lg={7}>
                     <div className="filter-nav d-flex justify-content-between align-items-center">
-                        <div>
+                        <div className="off-canves-btn">
                             <FaListUl />
-                            <NavLink
-                                to={'/products'}
-                                className={({ isActive }) =>
-                                    `custom-nav-link ${isActive ? " active" : ""} btn`
-                                }
-                            >All Categories</NavLink>
+                            <Button
+                                className='btn off-canves-btn'
+                                onClick={handleShow}
+                            >All Categories</Button>
                         </div>
+                        <Offcanvas show={show} onHide={handleClose}>
+                            <Offcanvas.Header closeButton>
+                                <Offcanvas.Title>All Categories</Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <Offcanvas.Body>
+                                {
+                                    Array.isArray(categories) && categories &&
+                                    categories.map((item, index)=>(
+                                        <div className="w-100 mt-1 mb-1" key={index}>
+                                            <button
+                                                className="btn btn-dark w-100"
+                                                onClick={()=>{
+                                                    console.log(`clicked: ${item.slug}`);
+                                                }}
+                                            >{item.name}</button>
+                                        </div>
+                                    ))
+                                }
+                                {
+                                    loading &&
+                                    <Spinner animation="border" role="status" className='spinner-product-loading'>
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
+                                }
+                                {
+                                    failMsg &&
+                                    <Alert key={'faild-msg'} variant={'warning'} className='w-100 top-50 start-50 translate-middle'>
+                                        {failMsg}
+                                        <i 
+                                            className="ms-2 clickable"
+                                            onClick={()=>{getCategories()}}
+                                        > Try Load Categories</i>
+                                    </Alert>
+                                }
+                            </Offcanvas.Body>
+                        </Offcanvas>
                         <div>
                             <NavLink 
                                 to={'/'}
@@ -29,46 +97,31 @@ const FilterNavbar = ({top}) => {
                         </div>
                         <div>
                             <NavLink 
-                                to={'/products?category=smartphones'}
+                                to={'/products'}
                                 className={({ isActive }) =>
                                     `custom-nav-link ${isActive ? " active" : ""} btn`
                                 }
-                            >Smart phones</NavLink>
+                            >products</NavLink>
                         </div>
                         <div>
                             <NavLink 
-                                to={'/products?category=laptops'} 
+                                to={'/about-us'} 
                                 className={({ isActive }) =>
                                     `custom-nav-link ${isActive ? " active" : ""} btn`
                                 }
-                            >Laptops</NavLink>
+                            >About Us</NavLink>
                         </div>
                         <div>
                             <NavLink 
-                                to={'/products?category=beauty'}
+                                to={'/contact-us'}
                                 className={({ isActive }) =>
                                     `custom-nav-link ${isActive ? " active" : ""} btn`
                                 }
-                            >Beauty</NavLink>
-                        </div>
-                        <div>
-                            <Dropdown>
-                                <Dropdown.Toggle variant="white" id="dropdown-basic" className="border-0">
-                                    Help
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item  as="div" to={'/contact-us'}>
-                                        <NavLink to={'/contact-us'} className={'btn'}>Contact Us</NavLink>
-                                    </Dropdown.Item>
-                                    <Dropdown.Item  as="div" to={'/about-us'}>
-                                        <NavLink to={'/about-us'} className={'btn'}>About Us</NavLink>
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+                            >Contact Us</NavLink>
                         </div>
                     </div>
                 </Col>
-                <Col lg={4} className="pe-0">
+                <Col lg={5} className="pe-0">
                     <div className="filter-nav d-flex justify-content-end align-items-center gap-3">
                         <Dropdown>
                             <Dropdown.Toggle variant="white" id="dropdown-basic-money" className="border-0">
@@ -94,7 +147,6 @@ const FilterNavbar = ({top}) => {
                 </Col>
             </Row>
         </Container>
-        {/* <hr className='pt-0 mt-0'/> */}
     </>
   )
 }

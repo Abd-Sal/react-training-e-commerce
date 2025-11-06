@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Spinner } from 'react-bootstrap'
 import { NavLink } from 'react-router'
+import { CallAPIService } from '../Services/CallAPIService';
+import { APIConfig } from '../API/APIConfig';
 
 const CateHeroSection = () => {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(false);
     const [faildMsg, setFaildMsg] = useState('');
-
     useEffect(()=>{
         setFaildMsg('');
         setLoading(true);
-        fetch('https://dummyjson.com/products/category-list')
-        .then((res)=>{
-            if(res.ok)
-              return res.json()
-            return response.json().then((serverError)=>{
-                throw new Error(serverError.message || `HTTP ${response.status}`)
-            })
+        CallAPIService.getFetch({
+          'limit': 9,
+          'skip': 0,
+          'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.CATEGORIRES}`
         })
         .then((data)=>{
-          setCategories(data.slice(0,10))
+          setCategories(data.slice(0, 10))
         })
         .catch((error)=>{
           setFaildMsg(error.message);

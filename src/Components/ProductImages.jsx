@@ -6,6 +6,7 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 // Optional: If you want the carousel functionality
 import { Carousel } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/carousel/carousel.css";
+
 const ProductImages = ({images}) => {
     const [fancyboxRef] = useFancybox({})
     const [loading, setLoading] = useState(true);
@@ -14,20 +15,13 @@ const ProductImages = ({images}) => {
         if(images){
             setLoading(false)
         }
-    }, [loading])
-
+    }, [images])
     const galleryRef = useRef(null);
-
     useEffect(() => {
         const gallery = galleryRef.current;
-
-        // Initialize Fancybox
         Fancybox.bind(gallery, "[data-fancybox]", {
-        // Your custom options
             infinite: false,
         });
-
-        // Cleanup
         return () => {
             Fancybox.unbind(gallery);
             Fancybox.close();
@@ -53,6 +47,14 @@ const ProductImages = ({images}) => {
                                 <a href={`${images[0]}`} data-fancybox="gallery">
                                     <img src={`${images[0]}`} alt="Image 1" />
                                 </a>
+                                {
+                                    images.length > 1 &&
+                                    images.slice(1).map((item, index)=>(
+                                        <a href={`${item}`} data-fancybox="gallery">
+                                            <img src={`${item}`} alt={index} />
+                                        </a>
+                                    ))
+                                }
                                 {/* <a href="/image2.jpg" data-fancybox="gallery">
                                     <img src="/thumb2.jpg" alt="Image 2" />
                                 </a>

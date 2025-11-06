@@ -45,7 +45,7 @@ export default ProfileHeroSection;
 export const OfferWithNewSupplier = () => {
   return (
     <NavLink to={'about-us'}>
-        <div className="w-100 offer-by-supplier shadow-sm p-3 pt-2 pb-2 rounded-2 mt-2 mb-1 d-flex justify-content-start align-items-center">
+        <div className="w-100 offer-by-supplier shadow-sm p-3 pt-0 pb-2 rounded-2 mt-2 mb-1 d-flex justify-content-start align-items-center">
             <h4>Get US $10 off <br /> with a new <br /> supplier</h4>
         </div>
     </NavLink>

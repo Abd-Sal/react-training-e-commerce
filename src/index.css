@@ -85,6 +85,17 @@ a.nav-action{
     border-radius: 6px;
     box-shadow: 0px 0px 4px #cccccc80;
 }
+.off-canves-btn:hover{
+    color: #333333;
+    border: 0px;
+}
+.off-canves-btn{
+    background-color: #fff !important;
+    border: 0px !important;
+    color: #000;
+    font-weight: 600;
+    padding: 6px;
+}
 .nav-action:hover{
     box-shadow: 0px 0px 4px #cccccc80;
     border-radius: 4px;
@@ -405,4 +416,47 @@ p.offer-time{
         opacity: 1;
         transform: rotate(5deg);
     }
+}
+
+.hidden-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.button-style-label {
+    width: 100%;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.hidden-checkbox:checked + .button-style-label {
+    background-color: #289fa7;
+}
+
+.hidden-checkbox:focus + .button-style-label {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+.info-color:hover{
+    background-color: #027d96c5;
+}
+.info-color{
+    background-color: #027d96;
+    color: #fff;
+}
+
+.clickable{
+    cursor: pointer;
+    text-decoration: underline;
+    color: #007bff;
+}
+.font-small{
+    font-size: 10px !important;
 }

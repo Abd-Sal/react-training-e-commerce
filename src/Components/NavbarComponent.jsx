@@ -15,7 +15,7 @@ const NavbarComponent = ({showNavFilter=true}) => {
               <Col lg={7}>
                 <SearchNavbar/>
               </Col>
-              <Col lg={3} className='d-flex justify-content-end align-items-center'>
+              <Col lg={3} className='d-flex justify-content-end align-items-center pe-0'>
                 <NavbarActions/>
               </Col>
           </Row>
@@ -26,6 +26,7 @@ const NavbarComponent = ({showNavFilter=true}) => {
         ? <FilterNavbar top={'pb-2'}/>
         : ''
       }
+      {/* <hr className='pt-0 mt-0'/> */}
     </>
   )
 }

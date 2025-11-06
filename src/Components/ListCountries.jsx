@@ -5,52 +5,52 @@ const ListCountries = () => {
     const[countries, setCountries] = useState([
         {
             'name':  'United Arab Emirats',
-            'flag' : <span class="fi fi-ae  size"></span>,
+            'flag' : <span className="fi fi-ae  size"></span>,
             'shopName' : 'Shopname.com.ae'
         },
         {
             'name':  'Australia',
-            'flag' : <span class="fi fi-au size"></span>,
+            'flag' : <span className="fi fi-au size"></span>,
             'shopName' : 'Shopname.com.ae'
         },
         {
             'name':  'United State America',
-            'flag' : <span class="fi fi-us size"></span>,
+            'flag' : <span className="fi fi-us size"></span>,
             'shopName' : 'Shopname.com.ae'
         },
         {
             'name':  'Russia',
-            'flag' : <span class="fi fi-ru size"></span>,
+            'flag' : <span className="fi fi-ru size"></span>,
             'shopName' : 'Shopname.com.ra'
         },
         {
             'name':  'Italy',
-            'flag' : <span class="fi fi-it size"></span>,
+            'flag' : <span className="fi fi-it size"></span>,
             'shopName' : 'Shopname.com.it'
         },
         {
             'name':  'Denmark',
-            'flag' : <span class="fi fi-dk size"></span>,
+            'flag' : <span className="fi fi-dk size"></span>,
             'shopName' : 'Shopname.com.dk'
         },
         {
             'name':  'France',
-            'flag' : <span class="fi fi-fr size"></span>,
+            'flag' : <span className="fi fi-fr size"></span>,
             'shopName' : 'Shopname.com.fr'
         },
         {
             'name':  'China',
-            'flag' : <span class="fi fi-cn size"></span>,
+            'flag' : <span className="fi fi-cn size"></span>,
             'shopName' : 'Shopname.com.ch'
         },
         {
             'name':  'British',
-            'flag' : <span class="fi fi-io size"></span>,
+            'flag' : <span className="fi fi-io size"></span>,
             'shopName' : 'Shopname.com.br'
         },
         {
             'name':  'Syria',
-            'flag' : <span class="fi fi-sy size"></span>,
+            'flag' : <span className="fi fi-sy size"></span>,
             'shopName' : 'Shopname.com.sy'
         },
     ])

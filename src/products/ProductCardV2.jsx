@@ -1,3 +1,4 @@
+import { NavItem } from "react-bootstrap";
 import { NavLink } from "react-router";
 
 const ProductCardV2 = ({id = '', thumbnail = '', title = '', description = '', rating = 0, category = '', price = 0, discountPercentage = 0, cardType = 0}) => {
@@ -15,27 +16,70 @@ const ProductCardV2 = ({id = '', thumbnail = '', title = '', description = '', r
                         </div>
                         <div className="rate-sec d-flex justify-content-start gap-1 align-items-center">
                             {
-                                (() => {
+                                (()=>{
                                     const stars = [];
+                                    const integer = Math.floor(rating);
+                                    let rest = parseFloat(rating - integer);
                                     for (let i = 0; i < 5; i++) {
+                                        if(i < integer)
+                                        {
+                                            stars.push(
+                                            <div key={i}>
+                                            <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path 
+                                                    fillRule="evenodd" 
+                                                    clipRule="evenodd" 
+                                                    d="M8 12.0553L12.944 15L11.632 9.45L16 5.71579L10.248 5.23421L8 0L5.752 5.23421L0 5.71579L4.368 9.45L3.056 15L8 12.0553Z" 
+                                                    fill={"#FF9017"}
+                                                />
+                                            </svg>
+                                            </div>)
+                                            continue;
+                                        }
+                                        if(rest > 0){
+                                            stars.push(
+                                            <div key={i}>
+                                            <svg
+                                                width={'16'}
+                                                height={'15'}
+                                                viewBox="0 0 16 15"
+                                                fill="none"
+                                                style={{
+                                                    position: 'relative',
+                                                    clipPath: `inset(0 ${(rest)*100}% 0 0)`
+                                                }}
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    clipRule="evenodd"
+                                                    d="M8 12.0553L12.944 15L11.632 9.45L16 5.71579L10.248 5.23421L8 0L5.752 5.23421L0 5.71579L4.368 9.45L3.056 15L8 12.0553Z"
+                                                    fill="#FF9017"
+                                                />
+                                            </svg>
+                                            </div>)
+                                            rest = 0
+                                            continue
+                                        }
                                         stars.push(
                                             <div key={i}>
-                                                <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path 
-                                                        fillRule="evenodd" 
-                                                        clipRule="evenodd" 
-                                                        d="M8 12.0553L12.944 15L11.632 9.45L16 5.71579L10.248 5.23421L8 0L5.752 5.23421L0 5.71579L4.368 9.45L3.056 15L8 12.0553Z" 
-                                                        fill={i < Math.floor(rating) ? "#FF9017" : "#D5CDC5"}
-                                                    />
-                                                </svg>
-                                            </div>
-                                        );
+                                            <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path 
+                                                    fillRule="evenodd" 
+                                                    clipRule="evenodd" 
+                                                    d="M8 12.0553L12.944 15L11.632 9.45L16 5.71579L10.248 5.23421L8 0L5.752 5.23421L0 5.71579L4.368 9.45L3.056 15L8 12.0553Z" 
+                                                    fill={"#D5CDC5"}
+                                                />
+                                            </svg>
+                                            </div>)
                                     }
-                                    return stars;
+                                    return stars
                                 })()
                             }
                         </div>
-                        <h2 className='title-product'>{title}</h2>
+                        <div className="d-flex jus">
+                            <h2 className='title-product'>{title}</h2>
+                            {/* <i>rating: {rating}</i> */}
+                        </div>
                     </div>
                 </NavLink>
             )

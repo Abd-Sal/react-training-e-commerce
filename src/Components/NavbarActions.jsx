@@ -5,6 +5,7 @@ import { TiShoppingCart } from "react-icons/ti";
 import { useEffect, useState } from "react";
 import { IoLogOut } from "react-icons/io5";
 import { useNavigate } from "react-router";
+import { NavLink } from "react-bootstrap";
 
 const NavbarActions = () => {
   const [logoutShow, setLogoutShow] = useState(false)
@@ -25,22 +26,22 @@ const NavbarActions = () => {
 
   return (
     <div className="d-flex justify-content-between align-items-center gap-3">
-      <a href="#" className='nav-action d-flex flex-column justify-content-center align-items-center'>
+      <NavLink to={'#'} className='nav-action d-flex flex-column justify-content-center align-items-center p-1'>
         <FaUser />
         <p>Profile</p>  
-      </a>
-      <a href="#" className='nav-action d-flex flex-column justify-content-center align-items-center'>
+      </NavLink>
+      <NavLink to={"#"} className='nav-action d-flex flex-column justify-content-center align-items-center p-1'>
         <MdFavorite />
         <p>Orders</p>  
-      </a>
-      <a href="#" className='nav-action d-flex flex-column justify-content-center align-items-center'>
+      </NavLink>
+      <NavLink to={'#'} className='nav-action d-flex flex-column justify-content-center align-items-center p-1'>
         <TiShoppingCart />
         <p>My Cart</p>  
-      </a>
+      </NavLink>
       {
         logoutShow && 
         <button 
-          className='btn nav-action d-flex flex-column justify-content-center align-items-center'
+          className='btn nav-action d-flex flex-column justify-content-center align-items-center p-1'
           onClick={()=>{
             console.log('logged out')
             logout()

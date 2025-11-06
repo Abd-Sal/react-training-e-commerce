@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Alert, Col, Row, Spinner } from "react-bootstrap"
 import { NavLink } from "react-router"
 import ProductCardV2 from "../products/ProductCardV2";
+import { CallAPIService } from '../Services/CallAPIService';
+import { APIConfig } from '../API/APIConfig';
 
 const ProductsPackage8 = ({title, backgroundURL, categroy, limit=8}) => {
   const [products, setProducts] = useState([]);
@@ -11,13 +13,10 @@ const ProductsPackage8 = ({title, backgroundURL, categroy, limit=8}) => {
   const getProducts = ()=>{
     setIsLoading(true);
     setIsFailed('');
-    fetch(`https://dummyjson.com/products/category/${categroy}?limit=${limit}`)
-    .then((response)=>{
-      if(response.ok)
-        return response.json();
-      return response.json().then((serverError)=>{
-          throw new Error(serverError.message || `HTTP ${response.status}`)
-      })
+    CallAPIService.getFetch({
+      'limit': limit,
+      'skip': 0,
+      'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS_BY_CATEGORIRES(categroy)}`
     })
     .then((data)=>{
       setProducts(data.products);

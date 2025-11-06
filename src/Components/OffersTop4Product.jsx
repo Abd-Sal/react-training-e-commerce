@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { Alert, Col, Row, Spinner } from "react-bootstrap";
 import ProductCardV2 from "../products/ProductCardV2";
+import { CallAPIService } from '../Services/CallAPIService';
+import { APIConfig } from '../API/APIConfig';
 
 const OffersTop4Product = ({query = 'phone', colSize = 3}) => {
     const [products, setProducts] = useState([]);
@@ -8,14 +10,13 @@ const OffersTop4Product = ({query = 'phone', colSize = 3}) => {
     const [failed, setFailed] = useState('');
 
     useEffect(()=>{
+        setFailed('')
         setLoading(true);
-        fetch(`https://dummyjson.com/products/search?q=${query}&limit=4`)
-        .then(res => {
-            if(res.ok) 
-                return res.json()
-            return response.json().then((serverError)=>{
-                throw new Error(serverError.message || `HTTP ${response.status}`)
-            })
+        CallAPIService.getFetch({
+          'limit': 4,
+          'skip': 0,
+          'searchQuery': `${query}`,
+          'url': `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.SEARCH_PRODUCT}`
         })
         .then(data => {
             setProducts(data.products);
@@ -26,6 +27,8 @@ const OffersTop4Product = ({query = 'phone', colSize = 3}) => {
         .finally(()=>{
             setLoading(false);
         })
+
+
     }, [])
 
     return (

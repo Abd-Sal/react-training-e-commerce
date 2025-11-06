@@ -1,7 +1,7 @@
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import { NavLink } from "react-router";
 import Logo from "../Components/Logo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SuccededRegister from "../Components/SuccededRegister";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
@@ -26,6 +26,7 @@ const Registration = () => {
             "field_gender": {
                 "target_id": 9
             },
+            "field_how_did_you_find_us": [ ],
             "pass": {
                 "value": ""
             }
@@ -35,6 +36,10 @@ const Registration = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showPass, setShowPass] = useState('password');
+
+    const [categories, setCategories] = useState([])
+    const [faileCat, setFailCat] = useState('')
+    const [loadingCat, setLoadingCat] = useState(false)
 
     const postData = ()=>{
         setIsLoading(true);
@@ -58,7 +63,32 @@ const Registration = () => {
         .finally(()=>{
             setIsLoading(false);
         })
-    }    
+    }
+
+    const getTermsCategories = ()=>{
+        setLoadingCat(true);
+        setFailCat('');
+        fetch(`https://tamkeen-dev.com/api/terms/hear`)
+        .then((response)=>{
+            if(response.ok)
+                return response.json()
+            return response.json().then((serverErrorMessage) =>{ throw new Error(serverErrorMessage.message)})
+        })
+        .then((data) =>{
+          setCategories(data);          
+        })
+        .catch((err)=>{
+            setFailCat(`${err.message} please refresh the page`)
+        })
+        .finally(()=>{
+            setLoadingCat(false)
+        })
+    }
+
+    useEffect(()=>{
+        getTermsCategories();
+    }, [])
+
     return (
         <>
             <Container>
@@ -74,7 +104,7 @@ const Registration = () => {
                                 postData()
                             }}
                         >
-                            <div className="w-100 d-flex justify-content-center align-items-center">
+                            <div className="w-100 d-flex justify-content-center align-items-center pt-5">
                                 <Logo/>
                             </div>
                             <h4>Create New Account, if you have account <NavLink to={'/login'} className={'primary-color'}>Sign in</NavLink></h4>
@@ -166,6 +196,57 @@ const Registration = () => {
                                     <option value="9">Male</option>
                                     <option value="10">Female</option>
                             </select>
+                            
+                            <div key={'cates'} className='w-100 d-flex justify-content-between align-items-center flex-wrap gap-4'>
+                                {
+                                    Array.isArray(categories) && categories &&
+                                    categories.map((item) => (
+                                        <div key={`div-${item.id}`} className="d-flex jusity-content-start align-items-center gap-1">
+                                            <input 
+                                                type="checkbox"
+                                                id={`check-${item.id}`}
+                                                value={item.id}
+                                                onChange={(e)=>{
+                                                    let arrCats = [...registerData.field_how_did_you_find_us]
+                                                    let checkedValue = e.target.value;
+                                                    if(e.target.checked){
+                                                        setRegisterData({
+                                                            ...registerData,
+                                                            'field_how_did_you_find_us':[
+                                                                ...arrCats,
+                                                                {"target_id": e.target.value}
+                                                            ]
+                                                        })
+                                                    }else{
+                                                        setRegisterData({
+                                                            ...registerData,
+                                                            'field_how_did_you_find_us':[
+                                                                ...arrCats.filter(prev => prev.target_id !== checkedValue),
+                                                            ]
+                                                        })
+                                                    }
+                                                }}
+                                            />
+                                            <label htmlFor={`check-${item.id}`}>{item.name}</label>
+                                        </div>
+                                    ))
+                                }
+                                {
+                                    loadingCat &&
+                                    <div key={'loading'} className="w-100 d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner>   
+                                    </div>
+                                }
+                                {
+                                    faileCat &&
+                                    <Alert variant="danger" className={`w-100`}>
+                                        {faileCat}
+                                    </Alert>
+                                }
+                            </div>
+
                             <div className="position-relative w-100">
                                 <input 
                                     type={showPass}
