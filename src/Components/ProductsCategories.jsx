@@ -4,7 +4,7 @@ import { APIConfig } from "../API/APIConfig"
 import { CallAPIService } from "../Services/CallAPIService"
 import { useSearchParams } from "react-router"
 
-const ProductsCategories = React.memo(function ProductsCategories() {
+const ProductsCategories = React.memo(function ProductsCategories( {setCategory}) {
     const [categories, setCategories] = useState({})
     const [loading, setLoading] = useState(false)
     const [failMsg, setFailMsg] = useState('')
@@ -70,6 +70,9 @@ const ProductsCategories = React.memo(function ProductsCategories() {
                     <label
                         htmlFor="all-categories" 
                         className="info-color button-style-label"
+                        onClick={(e)=>{
+                            setCategory(e.target.textContent)
+                        }}
                     >
                     All Products</label>
                 </Col>
@@ -94,6 +97,9 @@ const ProductsCategories = React.memo(function ProductsCategories() {
                         <label 
                             htmlFor={item.slug}
                             className="info-color button-style-label"
+                            onClick={(e)=>{
+                                setCategory(e.target.textContent)
+                            }}
                         >{item.name}</label>
                     </Col>
                 ))

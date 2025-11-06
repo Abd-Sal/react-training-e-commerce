@@ -1,7 +1,7 @@
 import { FaListUl } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
@@ -16,6 +16,8 @@ const FilterNavbar = ({top}) => {
     const [failMsg, setFailMsg] = useState('')
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState({});
+
+    const navigate = useNavigate();
 
     const getCategories = ()=>{
         setFailMsg('')
@@ -56,14 +58,22 @@ const FilterNavbar = ({top}) => {
                                 <Offcanvas.Title>All Categories</Offcanvas.Title>
                             </Offcanvas.Header>
                             <Offcanvas.Body>
+                                <div className="cat-canves w-100 border-bottom border-primary" key={'index'}>
+                                    <button
+                                        className="btn ps-2 w-100 rounded-0 d-flex justify-content-start align-items-center"
+                                        onClick={()=>{
+                                            navigate(`/products`)
+                                        }}
+                                    >All Products</button>
+                                </div>
                                 {
                                     Array.isArray(categories) && categories &&
                                     categories.map((item, index)=>(
-                                        <div className="w-100 mt-1 mb-1" key={index}>
+                                        <div className="cat-canves w-100 border-bottom border-primary" key={index}>
                                             <button
-                                                className="btn btn-dark w-100"
+                                                className="btn ps-2 w-100  d-flex justify-content-start align-items-center"
                                                 onClick={()=>{
-                                                    console.log(`clicked: ${item.slug}`);
+                                                    navigate(`/products?category=${item.slug}`)
                                                 }}
                                             >{item.name}</button>
                                         </div>

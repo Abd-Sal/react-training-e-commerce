@@ -20,7 +20,7 @@ const Layout = ({children}) => {
   if(logoutShow)
     return (
       <>
-        <div className={"wrapper"}>
+        <div className={"wrapper home"}>
           <header>
               <NavbarComponent/>
           </header>

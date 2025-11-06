@@ -8,7 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 const Footer = () => {
   return (
         <>
-            <div>
+            <div className="bg-white">
                 <Container className="pt-4 h-100">
                     <Row>
                         <Col lg={3}>

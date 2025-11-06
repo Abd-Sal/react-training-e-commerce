@@ -4,7 +4,7 @@ import { CallAPIService } from '../Services/CallAPIService';
 import { APIConfig } from '../API/APIConfig';
 import { useSearchParams } from "react-router";
 
-const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]}) => {
+const Paginatoin = ({setTotalItems, setCategory, setAllProducts, setLoading, setErrorMsg, sortingFields=[]}) => {
 
     const [limit, setLimit] = useState(12)
     const [skip, setSkip] = useState(0)
@@ -44,14 +44,13 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
         if(!params.getAll.length)
             url = `${APIConfig.BASE_URL}${APIConfig.ENDPOINTS.PRODUCTS}`
         options['url'] = `${url}`
-        console.log(url);
-        
         setErrorMsg('');
         setLoading(true);
         CallAPIService.getFetch(options)
         .then((data) => {
             setAllProducts(data.products)
             setTotalProducts(data.total)
+            setTotalItems(data.total);
         })
         .catch((e) => {
             setErrorMsg(e.message);
@@ -62,11 +61,11 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
     }, [limit, sortBy, order, skip, searchParams])
 
   return (
-    <Row className="p-0">
+    <Row className="">
     {
         sortingFields.length ?
         <>
-            <Col className="ps-0">
+            <Col className="">
                 <select
                     name="sortBy"
                     id="sortBy"
@@ -100,7 +99,7 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
         :
         ''
     }
-        <Col lg={sortingFields.length ? '' : 6} className={sortingFields.length ? 'pe-0' : "ps-0"}>
+        <Col lg={sortingFields.length ? '' : 6} className={sortingFields.length ? '' : ""}>
             <select
                 name="limit"
                 id="limit"
@@ -117,7 +116,7 @@ const Paginatoin = ({setAllProducts, setLoading, setErrorMsg, sortingFields=[]})
                 <option value="48">48</option>
             </select>
         </Col>
-        <Col lg={12} className="p-0">
+        <Col lg={12} className="">
             <div className="w-100 d-flex justify-content-between align-items-center pt-2 pb-2">
                 <button 
                     className="btn btn-dark ps-5 pe-5"

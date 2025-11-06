@@ -10,6 +10,7 @@ import "@fancyapps/ui/dist/carousel/carousel.css";
 const ProductImages = ({images}) => {
     const [fancyboxRef] = useFancybox({})
     const [loading, setLoading] = useState(true);
+    const [activeImage, setActiveImage] = useState('')
 
     useEffect(()=>{
         if(images){
@@ -40,27 +41,46 @@ const ProductImages = ({images}) => {
         }
         return (
             <>
-                <Row>
+                <Row >
                     <Col lg={12}>
-                        <div className="w-100 h-100">
-                            <div ref={galleryRef}>
-                                <a href={`${images[0]}`} data-fancybox="gallery">
-                                    <img src={`${images[0]}`} alt="Image 1" />
-                                </a>
+                        <div className="w-100 h-100 p-2">
+                            <div ref={galleryRef} className="d-flex flex-wrap justify-content-start gap-1">
+                                <div className="w-100 h-100 rounded-1 border border-gray mb-1">
+                                    <a href={`${activeImage ? activeImage : images[0]}`} data-fancybox="gallery">
+                                        <img src={`${activeImage ? activeImage : images[0]}`} alt={'active image'} />
+                                    </a>
+                                </div>
                                 {
-                                    images.length > 1 &&
-                                    images.slice(1).map((item, index)=>(
-                                        <a href={`${item}`} data-fancybox="gallery">
-                                            <img src={`${item}`} alt={index} />
-                                        </a>
+                                    images.length &&
+                                    images.map((item, index)=>(
+                                        <div key={index} className={`prod-image-detail w-24 rounded-1 border border-gray mb-1`}>
+                                            <input
+                                                id={`image-${index}`}
+                                                className="hidden-checkbox"
+                                                type="radio"
+                                                name="act-img"
+                                                value={item}
+                                                onChange={(e)=>{
+                                                    if(e.target.checked)
+                                                        setActiveImage(e.target.value)
+                                                }}
+                                            />
+                                            <label htmlFor={`image-${index}`} className="button-style-label bg-white">
+                                                <img src={`${item}`} alt={`image`} />
+                                            </label>
+                                            {
+                                                index ?
+                                                <div className="d-none">
+                                                    <a href={`${item}`} data-fancybox="gallery">
+                                                        <img src={`${item}`} alt={'image'} />
+                                                    </a>
+                                                </div> 
+                                                :''                                           
+                                            }
+                                        </div>
+
                                     ))
                                 }
-                                {/* <a href="/image2.jpg" data-fancybox="gallery">
-                                    <img src="/thumb2.jpg" alt="Image 2" />
-                                </a>
-                                <a href="/image3.jpg" data-fancybox="gallery">
-                                    <img src="/thumb3.jpg" alt="Image 3" />
-                                </a> */}
                             </div>
                         </div>
                     </Col>

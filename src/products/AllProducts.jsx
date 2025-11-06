@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Row, Col, Alert } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner';
 import ProductCardV2 from './ProductCardV2';
 import Paginatoin from '../Components/Paginatoin';
 
-const AllProducts = () => {
+const AllProducts = ({gridShape, setTotalItems, setCategory}) => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('')
-
   return (
-      <Row className='position-relative' key={2}>
-          {(allProducts.length != 0 ? allProducts.map((item)=>(
-              <Col lg={4} key={item.id} className='pe-0 mb-3'>
+      <Row className='position-relative row-' key={2}>
+          {(allProducts.length != 0 ? allProducts.map((item, index)=>(
+              <Col lg={gridShape ? 4 : 12} key={item.id} className={`mb-3 pe-0 ${gridShape ? 'special-padding-product-card' : ''}`}>
                 <ProductCardV2
-                  cardType={1}
+                  cardType={gridShape ? 1 : 5}
+                  description={!gridShape ? item.description : ''}
                   id={item.id}
                   thumbnail={item.thumbnail}
                   title={item.title} 
@@ -30,7 +30,7 @@ const AllProducts = () => {
               !loading &&
               <>
               <Col lg={12} className='position-relative pt-5 pb-5'>
-                <Alert key={'faild-msg'} variant={'warning'} className='w-100 position-absolute top-50 start-50 translate-middle'>
+                <Alert key={'faild-msg'} variant={'warning'} className='position-absolute top-50 start-50 translate-middle'>
                     {
                       errorMsg ? errorMsg : 'No Results...'
                     }
@@ -46,8 +46,10 @@ const AllProducts = () => {
               </Spinner>
             </Col>
           }
-          <Col lg={12}>
+          <Col lg={12} className={`ps-0 ${gridShape ? 'pe-0' : '' }`}>
             <Paginatoin 
+              setCategory={setCategory}
+              setTotalItems={setTotalItems}
               setAllProducts={setAllProducts}
               setLoading={setLoading}
               setErrorMsg={setErrorMsg}
